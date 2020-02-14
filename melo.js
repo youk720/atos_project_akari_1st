@@ -69,9 +69,9 @@ function off_1(){
     }else{
       close_atos[0] = ""
     }
-    close_atos[1] = atos_sentence[1];
+    close_atos[1] = atos_sentence[2];
 
-    if(atos_sentence[5] == "上野"){
+    if(atos_sentence[6] == "上野"){
       close_atos[2] = train_line[line_num][1] + "\n上野止まり";
     }else{
       close_atos[2] = train_line[line_num][1];
@@ -93,7 +93,7 @@ function off_1(){
     for (let d = 0; d < 3; d++) {
       close_atos[1+d] = "";
     }
-    if(atos_sentence[4] === "回送" || atos_sentence[4] === "臨時" || atos_sentence[4] === "団体"){
+    if(atos_sentence[5] === "回送" || atos_sentence[5] === "臨時" || atos_sentence[5] === "団体"){
       close_atos[4] = train_type[kind_num][1] + res_den + "が";
     }else{
       close_atos[4] = res_den + "が";
@@ -114,7 +114,7 @@ function off_1(){
     } 
     // 
     for(d=0;d<4;d++){
-      close_atos[1+d] = atos_sentence[1+d];
+      close_atos[1+d] = atos_sentence[2+d];
     }
     close_atos[2] = train_line[line_num][1];
     
@@ -335,6 +335,7 @@ $('body').on('keydown', function(m){
   }else if(m.keyCode === 83){
     // 83 = sキー
     stop_atos();
+    // result_output();
     // 接近
   }else if(m.keyCode === 82){
     // 82 = Rキー
