@@ -65,15 +65,10 @@ $("#time_h").change(function(){
   atos_sentence[2] = t_hour_ten+ t_hour + t_min_ten + t_min +"発";
 });
 
-$("#time_m").change(function(){
-  min_time($("#time_m").val());
-  atos_sentence[2] = t_hour_ten+ t_hour + t_min_ten + t_min +"発";
-});
-
 // 分数(時間)処理の関数
 function min_time(minut){
-  // 10分まで,または20,30,40,50
-  if((minut <= 10 && minut >= 1) || minut === "20" || minut === "30" || minut === "40" || minut === "50"){
+  // 9分まで,または1の位0
+  if((minut >= 1 && minut < 10) || (minut.slice(1, 2) === "0" && minut != "0")){
     t_min = minut + "分\n";
     t_min_ten = "";
   }else if(minut === "0"){
@@ -86,39 +81,17 @@ function min_time(minut){
   }
 }
 
+$("#time_m").change(function(){
+  min_time($("#time_m").val());
+  atos_sentence[2] = t_hour_ten+ t_hour + t_min_ten + t_min +"発";
+});
+
 // 路線名
 d = 1;
 $("#line").change(function(){
   d = $("#line").val();
   atos_sentence[3] = train_line[d][1];
 });
-
-/*
-// 直通/周り追加判定
-$("[name=line_2]").change(function(){
-  // 直通
-  if($('[name=line_2][value=2]').prop('checked')){
-    // 直通パーツ,追加
-    for(d=0;d<train_line.length;d++){
-      if(atos_sentence[3]+"直通" === train_line[d][1]){
-        atos_sentence[3] = atos_sentence[3]+"直通";
-        atos_sentence[4] = "";
-        break;
-      }else if(d === (train_line.length-1) && atos_sentence[3]+"直通" != train_line[d][1]){
-        atos_sentence[4] = "直通";
-      }
-    }
-  // 周り
-  }else if($('[name=line_2][value=3]').prop('checked')){
-    atos_sentence[3] = "周り";
-  // 無し
-  }else if($('[name=line_2][value=4]').prop('checked')){
-    // atos_sentence[2] = "";
-    atos_sentence[3] = train_line[d][1];
-    atos_sentence[4] = "";
-    }
-});
-*/
 
 // 種別任意選択
 d = 1;
@@ -153,43 +126,34 @@ $("#cars").change(function(){
 function add_tr(){
   // 増結選択時
   if($("#add_tr_a").val() === "0"){
+    atos_sentence[15] = "増結"
     if($("#stop_sta").val() === "92_1"){
-      atos_sentence[10] = "空白0.5秒\n当駅で";
-      atos_sentence[11] = "";
+      atos_sentence[18] = "当駅";
     }else{
-      atos_sentence[10] = "空白0.5秒\n" + buund_for[$("#stop_sta").val()][1];
-      atos_sentence[11] = "で";
+      atos_sentence[18] = buund_for[$("#stop_sta").val()][1];
     }
-    atos_sentence[12] = atos_cross[$("#add_tr_b").val()][1];
-    atos_sentence[13] = cars[$("#add_tr_c").val()][1];
-    atos_sentence[14] = "増結をいたします";
-    atos_sentence[15] = "";
+    atos_sentence[16] = atos_cross[$("#add_tr_b").val()][1];
+    atos_sentence[17] = cars[$("#add_tr_c").val()][1];
 
     // 切離し
   }else if($("#add_tr_a").val() === "1"){
-    atos_sentence[10] = "空白0.5秒\nこの"+res_den+"の";
-    atos_sentence[11] = atos_cross[$("#add_tr_b").val()][1];
-    atos_sentence[12] = cars[$("#add_tr_c").val()][1];
-    atos_sentence[13] = "は";
-
+    atos_sentence[15] = "切り離し"
+    atos_sentence[16] = atos_cross[$("#add_tr_b").val()][1];
+    atos_sentence[17] = cars[$("#add_tr_c").val()][1];
     if($("#stop_sta").val() === "92_1"){
-      atos_sentence[14] = "当駅";
+      atos_sentence[18] = "当駅";
     }else{
-      atos_sentence[14] = buund_for[$("#stop_sta").val()][1];
+      atos_sentence[18] = buund_for[$("#stop_sta").val()][1];
     }
-    atos_sentence[15] = "止まりとなります";
-    
       // なし
   }else if($("#add_tr_a").val() === "2"){
-    for(d=0;d<6;d++){
-      atos_sentence[10+d] = "";
-    }
-
+    atos_sentence[15] = "なし"
   }
 }
 
 
 function result_output(){
+  add_tr();
   for(d=0;d<atos_sentence.length;d++){
     console.log(atos_sentence[d]);
   }

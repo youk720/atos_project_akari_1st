@@ -655,8 +655,8 @@ function yokoku(){
   info[26] = atos_sentence[17];
 
   // ループで路線愛称から行き先までの音源を自動追加
-  for(d=0;d<7;d++){
-    info[6+d] = atos_sentence[1+d];
+  for(d=0;d<8;d++){
+    info[5+d] = atos_sentence[1+d];
   }
 
 

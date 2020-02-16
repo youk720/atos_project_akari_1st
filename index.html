@@ -67,9 +67,16 @@
                     </p>
                     <p>愛称
                       <br>
+                    <input type="checkbox" id="train_name_tf">案内
                     <select id="train_name"></select>
                     <select id="train_no_ten"></select>
                     <select id="train_no_one"></select>
+
+                    <script type="text/javascript">
+                      for(x=1;x<=5;x++){
+                        $("#train_no_ten").append($("<option>").text(x))
+                      }
+                      </script>
                     </p>
                     <p>行先設定
                       <br>

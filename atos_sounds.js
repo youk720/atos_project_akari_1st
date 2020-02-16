@@ -449,6 +449,13 @@ let no = [
   ["./voiceroid_生成音源/number/50.mp3", "50"],
   // ["./voiceroid_生成音源/number/.mp3", ""],
 ]
+for (d = 26; d <= 30; d++) {
+  if(d === 30){
+    $("#train_no_one").append($("<option>").val(d).text(no[d][1].slice(1, 3)));
+  }else{
+    $("#train_no_one").append($("<option>").val(d).text(no[d][1]));
+  }
+}
 
 // 行先_単体
 let buund_for = [
