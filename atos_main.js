@@ -31,14 +31,15 @@ function add_playlist(){
 
 // 音源が実際に存在するかどうか、確認
 function check_sound(){
-
+  console.log("atos_mode:"+atos_mode);
+  
   // すでにチェックが済んでいる場合、直接再生させる
   if (list_link.length != 0) {
     console.log("clear");
-    setTimeout(sound_start, 1000);
 
   // 音源チェック
   }else{
+    $("#playlist_out").val($("#playlist_out").val()+"\n空白0.25秒");
     // 再生リストを入れる
     playlist = $("#playlist_out").val().split('\n');
     // チェック審査用フラグ
@@ -72,10 +73,10 @@ function check_sound(){
       // 完了後,時間をおいて再生開始
     }else{
       console.log("clear");
-      setTimeout(sound_start, 1000)
     }
     console.log(list_link);
   }
+  setTimeout(sound_start, 1000)
 }
 
 // 再生順番、初期定義

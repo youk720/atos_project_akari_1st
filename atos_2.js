@@ -23,7 +23,7 @@ let jun = [
   [""],
   ["行きが"],
   ["まいります"],
-  ["危ないですから、黄色い点字ブロックまで、お下がりください\n空白0.25秒"],
+  ["危険ですから、黄色い線まで、お下がりください\n空白0.25秒"],
   [""], //この列車は
   [""], //ドア数
   [""], //両数
@@ -44,7 +44,7 @@ let jun_yuru = [
   [], //種別
   [], //列車が
   ["まいります"], //まいります
-  ["危ないですから、黄色い点字ブロックまで、お下がりください\n空白0.25秒"],
+  ["危険ですから、黄色い線まで、お下がりください\n空白0.25秒"],
   [""]
 ]
 // 折り返し用接近
@@ -54,7 +54,7 @@ let arriv_back = [
   [""],
   ["当駅止まりの"],
   [""],
-  ["危ないですから、黄色い点字ブロックまで、お下がりください\n空白0.25秒"],
+  ["危険ですから、黄色い線まで、お下がりください\n空白0.25秒"],
   [""],
   [""], //ドア数
   [""], //両数
@@ -163,29 +163,20 @@ let t_hour_ten = "";
 let t_hour = "0時\n";
 let t_min_ten = "";
 let t_min = "ちょうど\n";
-// 時間
-$("#time_h").change(function(){
-  // 時間が10時まで
-  if($("#time_h").val() <= 10 || $("#time_h").val() === 20){
-    t_hour_ten = "";
-    t_hour = $("#time_h").val() + "時\n";
-  }else{
-    // 21時以降
-    if($("#time_h").val() > 20){
-      t_hour_ten = "20\n";
-      t_hour = $("#time_h").val() - 20 + "時\n"
-    }else{
-      t_hour_ten = "10\n";
-      t_hour = $("#time_h").val() - 10 + "時\n"
-    }
-  }
-  atos_sentence[1] = t_hour_ten+ t_hour + t_min_ten + t_min +"発";
-});
 
-$("#time_m").change(function(){
-  min_time($("#time_m").val());
-  atos_sentence[1] = t_hour_ten+ t_hour + t_min_ten + t_min +"発\n";
-});
+// 時間処理
+function hour_time(hour_x){
+  if(hour_x >= 21){
+    t_hour_ten = "20\n";
+    t_hour = hour_x - 20 + "時\n"
+  }else if(hour_x >= 11 && hour_x <= 19){
+      t_hour_ten = "10\n";
+      t_hour = hour_x - 10 + "時\n"
+  }else/* if(hour_x <= 10 || hour_x === 20)*/{
+    t_hour_ten = "";
+    t_hour = hour_x + "時\n";
+  }
+}
 
 // 分数(時間)処理の関数
 function min_time(minut){
@@ -202,6 +193,22 @@ function min_time(minut){
       t_min = minut.slice(1, 2) + "分\n"
   }
 }
+
+// 時間
+$("#time_h").change(function(){
+  hour_time($("#time_h").val());
+  atos_sentence[1] = t_hour_ten+ t_hour + t_min_ten + t_min +"発";
+});
+
+$("#time_m").change(function(){
+  min_time($("#time_m").val());
+  atos_sentence[1] = t_hour_ten+ t_hour + t_min_ten + t_min +"発\n";
+});
+// $("#time_a_submit").on('click', function(){
+//   hour_time($("#time_h").val());
+//   min_time($("#time_m").val());
+//   atos_sentence[1] = t_hour_ten+ t_hour + t_min_ten + t_min +"発\n";
+// });
 
 // 路線名
 let line_num = 1;
@@ -232,7 +239,9 @@ $("[name=line_2]").change(function(){
     // atos_sentence[3] = "";
     atos_sentence[3] = train_line[line_num][1];
     atos_sentence[4] = "";
-    }
+  }else if($('[name=line_2][value=1]').prop('checked')){
+    atos_sentence[4] = "経由";
+  }
 });
 
 // 種別任意選択
@@ -268,11 +277,11 @@ $("#seafty").change(function(){
 })
 
 //ドア数
-// let door_at = 78;
-// $("#doors").change(function(){
-//   door_at = $("#doors").val();
-//   atos_sentence[8] = atos_cross[door_at][1];
-// })
+let door_at = 0;
+$("#doors").change(function(){
+  door_at = $("#doors").val();
+  atos_sentence[8] = atos_cross[door_at][1];
+})
 
 // 両数
 let cars_num = 0;
@@ -454,18 +463,18 @@ function arriv(){
   }
 
   // 通常
-  if($('[name=type_2][value=0]').prop('checked')){
+  if($("#type_2").val() == 0){
     jun[3] = "";
     // jun[4] = atos_sentence[1];
     $("#playlist_out").val(jun.join('\n'));
 
     // 当駅始発
-  }else if($('[name=type_2][value=1]').prop('checked')){
+  }else if($("#type_2").val() == 1){
     jun[3] = "当駅始発";
     $("#playlist_out").val(jun.join('\n'));
 
     // 折り返し
-  }else if($('[name=type_2][value=2]').prop('checked')){
+  }else if($("#type_2").val() == 6){
     // arriv_back[8] = atos_sentence[1]
     arriv_back[4] = res_den+"がまいります";
     arriv_back[6] = "この"+res_den+"は";
@@ -486,28 +495,28 @@ function arriv(){
     arriv_back[22] =　"";
     $("#playlist_out").val(arriv_back.join('\n'));
 // 清掃ありの折り返し
-  }else if($('[name=type_2][value=6]').prop('checked')){
-    arriv_back[4] = res_den+"がまいります";
-    arriv_back[6] = "この"+res_den+"は";
+  // }else if($('[name=type_2][value=6]').prop('checked')){
+  //   arriv_back[4] = res_den+"がまいります";
+  //   arriv_back[6] = "この"+res_den+"は";
 
-    // ドア
-    if($("#door_car").prop('checked') == true){
-      arriv_back[7] = atos_sentence[8];
-      arriv_back[8] = atos_sentence[9];
-      // arriv_back[9] = "です";
-      arriv_back[11] = "空白0.5秒\n折り返し";
-    }else{
-      for(d=0;d<3;d++){
-        arriv_back[7+d] = "";
-      }
-      arriv_back[11] = "折り返し";
-    }
-    arriv_back[17] = buund_for[bound][1];
-    arriv_back[21] = "空白0.5秒\n空白0.5秒\nなお\n折り返し\n車内清掃を行います\nすぐの\nご乗車になれませんので\n乗車口で\nお待ちください";
-    $("#playlist_out").val(arriv_back.join('\n'));
+  //   // ドア
+  //   if($("#door_car").prop('checked') == true){
+  //     arriv_back[7] = atos_sentence[8];
+  //     arriv_back[8] = atos_sentence[9];
+  //     // arriv_back[9] = "です";
+  //     arriv_back[11] = "空白0.5秒\n折り返し";
+  //   }else{
+  //     for(d=0;d<3;d++){
+  //       arriv_back[7+d] = "";
+  //     }
+  //     arriv_back[11] = "折り返し";
+  //   }
+  //   arriv_back[17] = buund_for[bound][1];
+  //   arriv_back[21] = "空白0.5秒\n空白0.5秒\nなお\n折り返し\n車内清掃を行います\nすぐの\nご乗車になれませんので\n乗車口で\nお待ちください";
+  //   $("#playlist_out").val(arriv_back.join('\n'));
 
     // 簡易放送
-  }else if($('[name=type_2][value=3]').prop('checked')){
+  }else if($("#type_2").val() == 2){
     if(atos_sentence[0] != ""){
       jun_yuru[2] = atos_sentence[0] + "に";
     }else{
@@ -520,7 +529,7 @@ function arriv(){
     $("#playlist_out").val(jun_yuru.join('\n'));
 
     // 種別のみ接近
-  }else if($('[name=type_2][value=4]').prop('checked')){
+  }else if($("#type_2").val() == 3){
     // 種別
     if(atos_sentence[0] != ""){
       jun_yuru[2] = atos_sentence[0] + "に";
@@ -548,7 +557,7 @@ function arriv(){
     $("#playlist_out").val(jun_yuru.join('\n'));
 
     // 当駅止まり
-  }else if($('[name=type_2][value=7]').prop('checked')){
+  }else if($("#type_2").val() == 5){
     if(atos_sentence[0] != ""){
       jun_yuru[2] = atos_sentence[0] + "に";
     }else{
@@ -561,7 +570,7 @@ function arriv(){
 
      $("#playlist_out").val(jun_yuru.join('\n'));
     // 通過放送
-  }else if($('[name=type_2][value=5]').prop('checked')){
+  }else if($("#type_2").val() == 4){
     if(atos_sentence[0] != ""){
       jun_yuru[2] = atos_sentence[0] + "を";
     }else{

@@ -40,162 +40,37 @@ $("#smoking_value").html("禁煙音源ボリューム" + " 現在:" + Math.floor
 // off操作時の禁煙放送停止して、ドア閉め放送再生する処理の関数を定義。
 function off_1(){
   // off操作時の禁煙放送停止
-  // ドア閉放送種別変更
-    // ○番線
 
-    // /*
-  if($('[name=atos_door][value=0]').prop('checked')){
-    close_atos[0] = atos_sentence[0];
-    for(d=0;d<9;d++){
-      close_atos[1+d] = "";
-    }
-    close_atos[11] = "ドアが閉まります";
-  // ○番線の
-  }else if($('[name=atos_door][value=1]').prop('checked')){
-    if(atos_sentence[0] != ""){
-      close_atos[0] = atos_sentence[0] + "の";
-    }else{
-      close_atos[0] = ""
-    }
-    for(d=0;d<9;d++){
-      close_atos[1+d] = "";
-    }
-    close_atos[10] = ""
-    close_atos[11] = "ドアが閉まります";
-    // ○番線 路線愛称 路線名
-  }else if($('[name=atos_door][value=2]').prop('checked')){
-    if(atos_sentence[0] != ""){
-      close_atos[0] = atos_sentence[0] + "の";
-    }else{
-      close_atos[0] = ""
-    }
-    close_atos[1] = atos_sentence[2];
-
-    if(atos_sentence[6] == "上野"){
-      close_atos[2] = train_line[line_num][1] + "\n上野止まり";
-    }else{
-      close_atos[2] = train_line[line_num][1];
-    }
-    
-    for(d=0;d<8;d++){
-      close_atos[3+d] = "";
-    }
-    close_atos[11] = "ドアが閉まります";
-
-    // ○番線から "種別" が 発車いたします
-  }else if($('[name=atos_door][value=3]').prop('checked')){
-    if(atos_sentence[0] != ""){
-      close_atos[0] = atos_sentence[0] + "から";
-    }else{
-      close_atos[0] = ""
-    }
-
-    for (let d = 0; d < 3; d++) {
-      close_atos[1+d] = "";
-    }
-    if(atos_sentence[5] === "回送" || atos_sentence[5] === "臨時" || atos_sentence[5] === "団体"){
-      close_atos[4] = train_type[kind_num][1] + res_den + "が";
-    }else{
-      close_atos[4] = res_den + "が";
-    }
-    for (let d = 0; d < 4; d++) {
-      close_atos[5+d] = "";
-    }
-    close_atos[9] = "発車いたします";
-    close_atos[11] = "";
-
-    // 仙台式
-  }else if($('[name=atos_door][value=4]').prop('checked')){
-    // 番線設定有無
-    if(atos_sentence[0] != ""){
-      close_atos[0] = atos_sentence[0] + "から";
-    }else{
-      close_atos[0] = "";
-    } 
-    // 
-    for(d=0;d<4;d++){
-      close_atos[1+d] = atos_sentence[2+d];
-    }
-    close_atos[2] = train_line[line_num][1];
-    
-    // 2つ(行き分け)
-    if($("[name=bound_set][value=2]").prop('checked')){
-      close_atos[5] = buund_for[bound][1];
-      close_atos[6] = buund_for[bound_2][1];
-      close_atos[7] = "";
-      close_atos[8] = "行きが";
-      
-      // 山手用
-    }else if($('[name=bound_set][value=3]').prop('checked')){
-      close_atos[5] = buund_for[bound][1];
-      
-      for(d=0;d<bound_ga.length;d++){
-        if(buund_for[bound_2][1] + "方面行きが" === bound_ga[d][1]){
-          close_atos[6] = bound_ga[d][1];
-          close_atos[7] = "";
-          break;
-        }else if(d === (bound_ga.length-1) && buund_for[bound_2][1] + "方面行きが" != bound_ga[d][1]){
-          close_atos[6] = buund_for[bound_2][1];
-          close_atos[7] = "方面行きが";
-        }
-      }
-      
-
-      // 単独(連続パーツ)
-    }else if($('[name=bound_set][value=0]').prop('checked')){
-
-      for(d=0;d<bound_ga.length;d++){
-        if(buund_for[bound][1] + "行きが" === bound_ga[d][1]){
-          close_atos[5] = bound_ga[d][1];
-          close_atos[8] = "";
-          break;
-        }else if(d === (bound_ga.length-1) && buund_for[bound][1] + "行きが" != bound_ga[d][1]){
-          close_atos[5] = buund_for[bound][1];
-          close_atos[8] = "行きが";
-        }
-      }
-      close_atos[6] = "";
-      close_atos[7] = "";
-      // 単独パーツ
-    }else if($('[name=bound_set][value=1]').prop('checked')){
-      close_atos[5] = buund_for[bound][1];
-      close_atos[6] = "";
-      close_atos[7] = "";
-      close_atos[8] = "行きが";
-    }
-
-    close_atos[9] = "発車いたします";
-    // close_atos[10] = "空白0.5秒";
-    close_atos[11] = "空白0.5秒\nドアが閉まります";
-
-  }
-  // 戸閉ATOS再生処理
   if (atos_mode != 2) {
     atos1.pause();
     atos2.pause();
     list_link = [];
     playlist = [];
     $("#playlist_out").val("");
-    if($("#kkkm").prop('checked')){
-      $("#playlist_out").val(close_atos.join('\n') + "\n空白0.5秒\n空白0.5秒\n空白0.5秒\n空白0.5秒\n駆け込み乗車は\nおやめください\n空白0.5秒\n空白0.5秒\n無理なご乗車は\nおやめください\n空白0.5秒\n空白0.5秒\n駆け込み乗車は\nおやめください\n空白0.5秒\n空白0.5秒\n無理なご乗車は\nおやめください");
-    }else{
-      $("#playlist_out").val(close_atos.join('\n'));
-    }
+  // ドア閉放送種別変更
+    // ○番線
+  if($('[name=atos_door][value=0]').prop('checked')){
+    $("#playlist_out").val(off_3(0).join('\n'));
+
+    // ○番線 路線愛称 路線名
+  }else if($('[name=atos_door][value=2]').prop('checked')){
+    $("#playlist_out").val(off_3(1).join('\n'));
+
+    // ○番線から "種別" が 発車いたします
+  }else if($('[name=atos_door][value=3]').prop('checked')){
+    $("#playlist_out").val(off_3(2).join('\n'));
+
+    // 仙台式:房総成田
+  }else if($('[name=atos_door][value=4]').prop('checked')){
+    $("#playlist_out").val(off_3(3).join('\n'));
+    // 房総型
+  }else if($('[name=atos_door][value=1]').prop('checked')){
+    $("#playlist_out").val(off_3(4).join('\n'));
+  }
     soundnum = 0;
     check_sound();
     atos_mode = 3;
   }
-  // */
-
-  // 一時的でバック用
-  /*
-  list_link = [];
-    playlist = [];
- $("#playlist_out").val("");
- $("#playlist_out").val("1番線\nドアが閉まります\nご注意ください");
- soundnum = 0;
- check_sound();*/
-  
 }
 
 
@@ -223,6 +98,9 @@ function off(){
     melo_noiz.pause();
     melo_noiz.currentTime = 0;
     melo_noiz.loop = false;
+    if($('[name=on_mode][value=1]').prop('checked')){
+        atos_volume_change();
+      }
     setTimeout(off_1, 1780);
 
     console.log("melody's loop is " + melo.loop);
@@ -230,6 +108,10 @@ function off(){
     //以下は立川モードの処理
     else if($('[name=sw_mode][value=1]').prop('checked')){
       melo.loop = false;
+      if($('[name=on_mode][value=1]').prop('checked')){
+        atos_volume_change();
+      }
+      
       setTimeout(off_1, 1780);
       // door.play();
       console.log("melody's loop is " + melo.loop);
@@ -247,18 +129,11 @@ $(melo).on("ended", function(){
     melo_noiz.pause();
     melo_noiz.currentTime = 0;
     melo_noiz.loop = false;
+    atos_volume_change();
+    
   if ($('[name=sw_mode][value=2]').prop('checked')) {
     setTimeout(off_1, 1500);
   }
-  // 仙台式選択時に、メロディ終了後に駆け込み防止放送再生
-  // if($('[name=atos_door][value=4]').prop('checked')　&& over === true){
-  //   list_link = [];
-  //   playlist = [];
-  //   $("#playlist_out").val("");
-  //   $("#playlist_out").val("駆け込み乗車は\nおやめください\n空白0.5秒\n空白0.5秒\n無理なご乗車は\nおやめください\n空白0.5秒\n空白0.5秒\n駆け込み乗車は\nおやめください\n空白0.5秒\n空白0.5秒\n無理なご乗車は\nおやめください");
-  //   soundnum = 0;
-  //   check_sound();
-  // }
 });
 
 //戸閉放送流れてる時にonを押したら止める処理の関数定義
@@ -268,7 +143,10 @@ function on_door(){
     };
     if($('[name=on_mode][value=1]').prop('checked')){
       // 禁煙放送強制停止
-      stop_atos();
+      // stop_atos();
+      atos1.volume = 0;
+      atos2.volume = 0;
+      atos_volume = 0;
     }
 }
 
@@ -287,14 +165,6 @@ function time(){
 }
 
 time();
-
-function smoking(){
-  list_link = [];
-  playlist = [];
-  $("#playlist_out").val("禁煙放送\n空白0.25秒");
-  soundnum = 0;
-  check_sound()
-}
 
 
 
@@ -321,11 +191,11 @@ $('body').on('keydown', function(m){
   }else if(m.keyCode === 69) {
     //69キー=Eキー
     on();
-    on_door()
+    on_door();
     // 禁煙放送操作時
   }else if(m.keyCode === 88){
     // 88 = xキー
-    smoking();
+    sta_call();
     // ATOS起動
   }else if(m.keyCode === 71){
     // 71 = Gキー
@@ -343,7 +213,13 @@ $('body').on('keydown', function(m){
     // 予告
   }else if(m.keyCode === 87){
     // W = 87
-    yokoku();
+    notice();
+    // <キー
+  }else if(m.keyCode == 188){
+    up();
+    // >キー
+  }else if(m.keyCode == 190){
+    down();
   }
 })
 
@@ -374,19 +250,27 @@ $(volume).change(function() {
       melo.volume = volumeValue;
       $("#mv_value").html("メロディ用ボリューム" + " 現在:" + (volumeValue * 1000)/ 10);//ボリューム数値,元値を100倍して出力
     }
-
+    melo_noiz.volume =volumeValue*0.3;
   // $(volume).val(volumeValue);
 });
-// 禁煙放送ボリューム制御
-let volume_smoking = $("#smoking_volume");
-$(volume_smoking).change(function(){
-  let volumeValue = (volume_smoking.val().length === 1) ? '0.0' + volume_smoking.val() : '0.' + volume_smoking.val();
+// ATOS放送ボリューム制御
+// let volume_smoking = $("#smoking_volume");
+$($("#smoking_volume")).change(function(){
+  atos_volume_change();
+});
+
+function atos_volume_change(){
+  let volumeValue = ($("#smoking_volume").val().length === 1) ? '0.0' + $("#smoking_volume").val() : '0.' + $("#smoking_volume").val();
   if(volumeValue === "0.100"){
+    atos1.volume = 1;
+    atos2.volume = 1;
     atos_volume = 1;
     $("#smoking_value").html("禁煙音源ボリューム" + " 現在:" + 100);
   }else{
     $("#smoking_value").html("禁煙音源ボリューム" + " 現在:" + ((volumeValue) * 1000)/10);
     //ボリューム数値,元値を100倍して出力
     atos_volume = volumeValue;
+    atos1.volume = volumeValue;
+    atos2.volume = volumeValue;
   }
-});
+}
